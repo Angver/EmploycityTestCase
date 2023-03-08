@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package employcity.microservice.testcase.v1;
+
+option csharp_namespace = "Employcity.Microservice.Testcase.V1";
+option go_package = "employcity/microservice/testcase/v1;testcasev1";
+option java_multiple_files = true;
+option java_outer_classname = "TestcaseApiProto";
+option java_package = "com.employcity.microservice.testcase.v1";
+option objc_class_prefix = "EMT";
+option php_namespace = "Employcity\\Microservice\\Testcase\\V1";
+
+import "validate/validate.proto";
+import "employcity/microservice/testcase/v1/test_case.proto";
+
+// API тестового gRPC-сервера.
+service TestCaseAPI {
+  // Получает данные.
+  rpc Get(GetRequest) returns (GetResponse);
+  // Создаёт/обновляет данные.
+  rpc Set(SetRequest) returns (SetResponse);
+  // Удаляет данные.
+  rpc Delete(DeleteRequest) returns (DeleteResponse);
+}
+
+message GetRequest {
+  int32 id = 1 [(validate.rules).int32 = {gte: 1}];
+}
+
+message GetResponse {
+  Data data = 1;
+}
+
+message SetRequest {
+  string data = 1 [(validate.rules).string = {min_len: 1}];
+}
+
+message SetResponse {
+  Data data = 1;
+}
+
+message DeleteRequest {
+  int32 id = 1 [(validate.rules).int32 = {gte: 1}];
+}
+
+message DeleteResponse {}
