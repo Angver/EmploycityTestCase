@@ -11,6 +11,7 @@ import (
 	testcasev1 "github.com/angver/employcitytestcase/internal/api/grpc/gen/employcity/microservice/testcase/v1"
 	"github.com/jessevdk/go-flags"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 func main() {
@@ -51,6 +52,8 @@ func startGRPCServer(
 	var opts []grpc.ServerOption
 	s := grpc.NewServer(opts...)
 	testcasev1.RegisterTestCaseAPIServer(s, testcase_grpc.NewServerTestCase())
+
+	reflection.Register(s)
 
 	go func() {
 		<-ctx.Done()
