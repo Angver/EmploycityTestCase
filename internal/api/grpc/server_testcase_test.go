@@ -233,6 +233,18 @@ func TestServerTestCase_Get(t *testing.T) {
 				return nil, errors.New("rpc error: code = Internal desc = can't get article: some error")
 			},
 		},
+		{
+			name: "not found",
+			args: &args{
+				in0: context.Background(),
+				r:   &articlev1.GetRequest{Id: 1},
+			},
+			prepare: func(a *args, m *mocks) (*articlev1.GetResponse, error) {
+				m.storage.EXPECT().Get(internal.ArticleId(a.r.GetId())).Return(nil, nil)
+
+				return nil, errors.New("rpc error: code = NotFound desc = article doesn't exist")
+			},
+		},
 	}
 	for _, tt := range tests {
 		tt := tt

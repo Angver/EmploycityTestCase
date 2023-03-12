@@ -62,7 +62,7 @@ deps(){
 # Собрать исполняемый файл
 build(){
   deps
-  go build ./cmd/grpc-skeleton
+  go build ./cmd/employcity-test-case
 }
 
 # Собрать docker образ

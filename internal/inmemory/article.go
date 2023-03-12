@@ -19,7 +19,7 @@ func NewArticleStorage() *ArticleStorage {
 	}
 }
 
-func (s ArticleStorage) Set(id internal.ArticleId, title string, content string) (*internal.Article, error) {
+func (s *ArticleStorage) Set(id internal.ArticleId, title string, content string) (*internal.Article, error) {
 	if id == 0 {
 		return s.create(title, content)
 	}
@@ -27,14 +27,14 @@ func (s ArticleStorage) Set(id internal.ArticleId, title string, content string)
 	return s.update(id, title, content)
 }
 
-func (s ArticleStorage) Get(id internal.ArticleId) (*internal.Article, error) {
+func (s *ArticleStorage) Get(id internal.ArticleId) (*internal.Article, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
 	return s.articles[id], nil
 }
 
-func (s ArticleStorage) Delete(id internal.ArticleId) error {
+func (s *ArticleStorage) Delete(id internal.ArticleId) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -43,7 +43,7 @@ func (s ArticleStorage) Delete(id internal.ArticleId) error {
 	return nil
 }
 
-func (s ArticleStorage) create(title string, content string) (*internal.Article, error) {
+func (s *ArticleStorage) create(title string, content string) (*internal.Article, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -59,7 +59,7 @@ func (s ArticleStorage) create(title string, content string) (*internal.Article,
 	return article, nil
 }
 
-func (s ArticleStorage) update(id internal.ArticleId, title string, content string) (*internal.Article, error) {
+func (s *ArticleStorage) update(id internal.ArticleId, title string, content string) (*internal.Article, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 

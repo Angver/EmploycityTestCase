@@ -17,7 +17,7 @@ func NewArticleToPbMapper() *articleToPbMapper {
 
 type articleToPbMapper struct{}
 
-func (m articleToPbMapper) MapArticle(article *internal.Article) *articlev1.Article {
+func (m *articleToPbMapper) MapArticle(article *internal.Article) *articlev1.Article {
 	return &articlev1.Article{
 		Id:      int32(article.Id),
 		Title:   article.Title,

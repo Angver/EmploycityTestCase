@@ -26,16 +26,19 @@ type ServerTestCase struct {
 	pbMapper ArticleToPbMapper
 }
 
-func (c ServerTestCase) Get(_ context.Context, r *articlev1.GetRequest) (*articlev1.GetResponse, error) {
+func (c *ServerTestCase) Get(_ context.Context, r *articlev1.GetRequest) (*articlev1.GetResponse, error) {
 	article, err := c.storage.Get(internal.ArticleId(r.GetId()))
 	if err != nil {
 		return nil, status.Error(codes.Internal, fmt.Sprintf("can't get article: %s", err))
+	}
+	if article == nil {
+		return nil, status.Error(codes.NotFound, "article doesn't exist")
 	}
 
 	return &articlev1.GetResponse{Article: c.pbMapper.MapArticle(article)}, nil
 }
 
-func (c ServerTestCase) Create(_ context.Context, r *articlev1.CreateRequest) (*articlev1.CreateResponse, error) {
+func (c *ServerTestCase) Create(_ context.Context, r *articlev1.CreateRequest) (*articlev1.CreateResponse, error) {
 	article, err := c.storage.Set(0, r.GetTitle(), r.GetContent())
 	if err != nil {
 		return nil, status.Error(codes.Internal, fmt.Sprintf("can't create article: %s", err))
@@ -44,7 +47,7 @@ func (c ServerTestCase) Create(_ context.Context, r *articlev1.CreateRequest) (*
 	return &articlev1.CreateResponse{Article: c.pbMapper.MapArticle(article)}, nil
 }
 
-func (c ServerTestCase) Update(_ context.Context, r *articlev1.UpdateRequest) (*articlev1.UpdateResponse, error) {
+func (c *ServerTestCase) Update(_ context.Context, r *articlev1.UpdateRequest) (*articlev1.UpdateResponse, error) {
 	id := r.GetId()
 	if id == 0 {
 		return nil, status.Error(codes.InvalidArgument, "id is required")
@@ -80,7 +83,7 @@ func (c ServerTestCase) Update(_ context.Context, r *articlev1.UpdateRequest) (*
 	return &articlev1.UpdateResponse{Article: c.pbMapper.MapArticle(article)}, nil
 }
 
-func (c ServerTestCase) Delete(_ context.Context, r *articlev1.DeleteRequest) (*articlev1.DeleteResponse, error) {
+func (c *ServerTestCase) Delete(_ context.Context, r *articlev1.DeleteRequest) (*articlev1.DeleteResponse, error) {
 	for _, id := range r.GetIds() {
 		err := c.storage.Delete(internal.ArticleId(id))
 		if err != nil {
