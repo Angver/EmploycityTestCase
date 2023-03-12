@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/angver/employcitytestcase/internal"
+	"github.com/angver/employcitytestcase/internal/memcached/client"
 	"github.com/bradfitz/gomemcache/memcache"
 )
 
@@ -15,7 +16,7 @@ func NewArticleStorage(addr string) *ArticleStorage {
 
 // ArticleStorage хранилище в мемкеше
 type ArticleStorage struct {
-	mc *memcache.Client
+	mc client.MemcachedClient
 }
 
 func (s *ArticleStorage) Set(id internal.ArticleId, title string, content string) (*internal.Article, error) {
