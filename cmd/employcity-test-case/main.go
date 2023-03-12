@@ -7,8 +7,9 @@ import (
 	"net"
 	"sync"
 
-	testcase_grpc "github.com/angver/employcitytestcase/internal/api/grpc"
-	testcasev1 "github.com/angver/employcitytestcase/internal/api/grpc/gen/employcity/microservice/testcase/v1"
+	articlegrpc "github.com/angver/employcitytestcase/internal/api/grpc"
+	articlev1 "github.com/angver/employcitytestcase/internal/api/grpc/gen/employcity/microservice/article/v1"
+	"github.com/angver/employcitytestcase/internal/inmemory"
 	"github.com/jessevdk/go-flags"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -51,7 +52,10 @@ func startGRPCServer(
 
 	var opts []grpc.ServerOption
 	s := grpc.NewServer(opts...)
-	testcasev1.RegisterTestCaseAPIServer(s, testcase_grpc.NewServerTestCase())
+	articlev1.RegisterArticleAPIServer(s, articlegrpc.NewServerTestCase(
+		inmemory.NewArticleStorage(),
+		articlegrpc.NewArticleToPbMapper(),
+	))
 
 	reflection.Register(s)
 

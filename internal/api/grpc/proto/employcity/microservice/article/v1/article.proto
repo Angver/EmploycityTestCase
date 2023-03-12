@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package employcity.microservice.article.v1;
+
+option csharp_namespace = "Employcity.Microservice.Article.V1";
+option go_package = "employcity/microservice/article/v1;articlev1";
+option java_multiple_files = true;
+option java_outer_classname = "ArticleProto";
+option java_package = "com.employcity.microservice.article.v1";
+option objc_class_prefix = "EMA";
+option php_namespace = "Employcity\\Microservice\\Article\\V1";
+
+// Статья.
+message Article {
+  // Идентификатор статьи
+  int32 id = 1;
+  // Заголовок
+  string title = 2;
+  // Тело
+  string content = 3;
+}

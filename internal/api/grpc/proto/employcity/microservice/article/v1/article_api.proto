@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+package employcity.microservice.article.v1;
+
+option csharp_namespace = "Employcity.Microservice.Article.V1";
+option go_package = "employcity/microservice/article/v1;articlev1";
+option java_multiple_files = true;
+option java_outer_classname = "ArticleApiProto";
+option java_package = "com.employcity.microservice.article.v1";
+option objc_class_prefix = "EMA";
+option php_namespace = "Employcity\\Microservice\\Article\\V1";
+
+import "validate/validate.proto";
+import "employcity/microservice/article/v1/article.proto";
+import "google/protobuf/wrappers.proto";
+
+// API тестового gRPC-сервера.
+service ArticleAPI {
+  // Получает статью.
+  rpc Get(GetRequest) returns (GetResponse);
+  // Создаёт статью.
+  rpc Create(CreateRequest) returns (CreateResponse);
+  // Обновляет статью.
+  rpc Update(UpdateRequest) returns (UpdateResponse);
+  // Удаляет статью.
+  rpc Delete(DeleteRequest) returns (DeleteResponse);
+}
+
+message GetRequest {
+  int32 id = 1 [(validate.rules).int32 = {gte: 1}];
+}
+
+message GetResponse {
+  Article article = 1;
+}
+
+message CreateRequest {
+  string title = 1 [(validate.rules).string = {min_len: 1}];
+  string content = 2 [(validate.rules).string = {min_len: 1}];
+}
+
+message CreateResponse {
+  Article article = 1;
+}
+
+message UpdateRequest {
+  int32 id = 1;
+  Fields fields = 2;
+  message Fields {
+    google.protobuf.StringValue title = 1 [(validate.rules).string = {min_len: 1}];
+    google.protobuf.StringValue content = 2 [(validate.rules).string = {min_len: 1}];
+  }
+}
+
+message UpdateResponse {
+  Article article = 1;
+}
+
+message DeleteRequest {
+  repeated int32 ids = 1 [
+    (validate.rules).repeated = {
+      min_items: 1
+      unique: true
+    },
+    (validate.rules).repeated.items.int32 = {
+      gte: 1
+    }
+  ];
+}
+
+message DeleteResponse {}
